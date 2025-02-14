@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>致我最亲爱的人</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            background: linear-gradient(45deg, #ff69b4, #ff1493, #ff69b4);
+            overflow-y: auto;
+            font-family: 'Arial', sans-serif;
+            animation: backgroundAnimation 15s ease infinite;
+            cursor: pointer;
+            padding: 20px 0;
+        }
+
+        @keyframes backgroundAnimation {
+            0% { background: linear-gradient(45deg, #ff69b4, #ff1493, #ff69b4); }
+            50% { background: linear-gradient(45deg, #ff1493, #ff69b4, #ff1493); }
+            100% { background: linear-gradient(45deg, #ff69b4, #ff1493, #ff69b4); }
+        }
+
+        .container {
+            text-align: center;
+            color: white;
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 2s ease-in;
+            position: relative;
+            overflow: hidden;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 100%;
+            background: white;
+            border-left: 2px solid #ff1493;
+            animation: typing 3s steps(20) forwards;
+        }
+
+        @keyframes typing {
+            to {
+                left: 100%;
+            }
+        }
+
+        p {
+            font-size: 1.2em;
+            line-height: 1.6;
+            margin: 10px 0;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+            animation: slideUp 1s ease-out;
+            transition: all 0.3s ease;
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+
+        p:hover {
+            transform: scale(1.05) translateZ(20px);
+            color: #ff1493;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+        }
+
+        .message {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s ease;
+            position: relative;
+            perspective: 1000px;
+        }
+
+        .message:hover {
+            animation: wobble 0.5s ease-in-out;
+        }
+
+        @keyframes wobble {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px) rotateY(-5deg); }
+            75% { transform: translateX(5px) rotateY(5deg); }
+        }
+
+        .message.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .heart {
+            position: absolute;
+            pointer-events: none;
+            animation: floatHeart 4s cubic-bezier(0.36, 0, 0.66, -0.56) infinite;
+            transform-origin: center;
+        }
+
+        .photo-container {
+            position: relative;
+            margin: 20px auto;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            transition: all 0.5s ease;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+            animation: fadeIn 1.5s ease-in;
+            width: 80vw;
+            max-width: 500px;
+            height: auto;
+            aspect-ratio: 1/1;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .photo-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(255,255,255,0.1), rgba(255,255,255,0.5));
+            transform: translateZ(20px);
+            pointer-events: none;
+        }
+
+        .photo-container:hover {
+            transform: rotateY(15deg) rotateX(5deg);
+            box-shadow: -15px 8px 25px rgba(0, 0, 0, 0.25);
+        }
+
+        .love-photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 12px;
+            display: block;
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: transform 0.5s ease;
+        }
+
+        .photo-container:hover .love-photo {
+            transform: scale(1.05);
+        }
+
+        .ripple {
+            position: absolute;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            animation: rippleEffect 1s ease-out;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            pointer-events: none;
+            background: white;
+            border-radius: 50%;
+            filter: blur(1px);
+        }
+
+        @keyframes rippleEffect {
+            from {
+                width: 0;
+                height: 0;
+                opacity: 0.5;
+            }
+            to {
+                width: 100px;
+                height: 100px;
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes floatHeart {
+            0% {
+                transform: translateY(0) rotate(0deg) scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: translateY(-500px) rotate(360deg) scale(1.5);
+                opacity: 0.5;
+            }
+            100% {
+                transform: translateY(-1000px) rotate(720deg) scale(0.5);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>亲爱的韦韦，情人节快乐！</h1>
+        <div class="photo-container">
+            <img src="love_photo.jpg" alt="我们的照片" class="love-photo">
+        </div>
+        <p class="message">在这特别的日子里，想跟你说：</p>
+        <p class="message">你就是我的安逸美女，巴适得很！</p>
+        <p class="message">跟你在一起，我的心都要萨西了～</p>
+        <p class="message">你晓得不，遇见你是我最大的幸福！</p>
+        <p class="message">我要跟你耍一辈子，天天都要把你宠到底！</p>
+        <p class="message">愿我们的爱情永远甜蜜浪漫，巴适安逸！</p>
+        <p class="message">❤️ Zach永远爱你，这个事儿板板整整！❤️</p>
+    </div>
+
+    <script>
+        // 文字点击效果
+        document.querySelectorAll('.message').forEach(msg => {
+            msg.addEventListener('click', (e) => {
+                const text = document.createElement('div');
+                text.className = 'click-effect';
+                text.style.cssText = `
+                    position: absolute;
+                    left: ${e.offsetX}px;
+                    top: ${e.offsetY}px;
+                    pointer-events: none;
+                    animation: textPop 0.5s ease-out forwards;
+                    color: #ff1493;
+                    font-weight: bold;
+                `;
+                text.textContent = '❤';
+                msg.appendChild(text);
+                
+                setTimeout(() => text.remove(), 500);
+            });
+        });
+
+        // 文字视差效果
+        let lastMouseX = 0;
+        let lastMouseY = 0;
+        let rafId = null;
+
+        document.addEventListener('mousemove', (e) => {
+            const mouseX = e.clientX / window.innerWidth - 0.5;
+            const mouseY = e.clientY / window.innerHeight - 0.5;
+
+            if (rafId) {
+                cancelAnimationFrame(rafId);
+            }
+
+            rafId = requestAnimationFrame(() => {
+                const messages = document.querySelectorAll('.message');
+                const lerpFactor = 0.1;
+                lastMouseX = lastMouseX + (mouseX - lastMouseX) * lerpFactor;
+                lastMouseY = lastMouseY + (mouseY - lastMouseY) * lerpFactor;
+
+                messages.forEach((msg, index) => {
+                    const depth = (index + 1) * 0.1;
+                    const moveX = lastMouseX * depth * 20;
+                    const moveY = lastMouseY * depth * 20;
+                    msg.style.transform = `translate3d(${moveX}px, ${moveY}px, 0) scale(${1 + depth * 0.05})`;
+                });
+            });
+        });
+
+        // 添加新的动画关键帧
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes textPop {
+                0% { transform: scale(0.5); opacity: 1; }
+                100% { transform: scale(2); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
+            heart.innerHTML = '❤️';
+            document.body.appendChild(heart);
+
+            setTimeout(() => {
+                heart.remove();
+            }, 4000);
+        }
+
+        let activeParticles = 0;
+        const MAX_PARTICLES = 50;
+
+        function createParticle(x, y) {
+            if (activeParticles >= MAX_PARTICLES) return;
+            
+            activeParticles++;
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            const size = Math.random() * 4 + 2;
+            particle.style.width = size + 'px';
+            particle.style.height = size + 'px';
+            particle.style.left = x + 'px';
+            particle.style.top = y + 'px';
+            document.body.appendChild(particle);
+
+            const angle = Math.random() * Math.PI * 2;
+            const velocity = Math.random() * 1.5 + 0.5;
+            const dx = Math.cos(angle) * velocity;
+            const dy = Math.sin(angle) * velocity;
+            let opacity = 1;
+
+            function animate() {
+                opacity -= 0.03;
+                particle.style.opacity = opacity;
+                particle.style.left = (parseFloat(particle.style.left) + dx) + 'px';
+                particle.style.top = (parseFloat(particle.style.top) + dy) + 'px';
+
+                if (opacity > 0) {
+                    requestAnimationFrame(animate);
+                } else {
+                    particle.remove();
+                    activeParticles--;
+                }
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        function createRipple(event) {
+            const ripple = document.createElement('div');
+            ripple.className = 'ripple';
+            ripple.style.left = (event.clientX - 50) + 'px';
+            ripple.style.top = (event.clientY - 50) + 'px';
+            document.body.appendChild(ripple);
+
+            for (let i = 0; i < 8; i++) {
+                createParticle(event.clientX, event.clientY);
+            }
+
+            setTimeout(() => {
+                ripple.remove();
+            }, 1000);
+
+            createHeart();
+        }
+
+        document.body.addEventListener('click', createRipple);
+        let lastParticleTime = 0;
+        document.body.addEventListener('mousemove', (e) => {
+            const now = Date.now();
+            if (now - lastParticleTime > 50 && Math.random() < 0.1) {
+                createParticle(e.clientX, e.clientY);
+                lastParticleTime = now;
+            }
+        });
+
+        let lastHeartTime = 0;
+        function createHeartWithThrottle() {
+            const now = Date.now();
+            if (now - lastHeartTime > 500) {
+                createHeart();
+                lastHeartTime = now;
+            }
+        }
+        setInterval(createHeartWithThrottle, 500);
+
+        const messages = document.querySelectorAll('.message');
+        messages.forEach((msg, index) => {
+            setTimeout(() => {
+                msg.classList.add('visible');
+            }, 1000 + 500 * index);
+        });
+
+        const photoContainer = document.querySelector('.photo-container');
+        let lastPhotoX = 0;
+        let lastPhotoY = 0;
+        let photoRafId = null;
+
+        document.addEventListener('mousemove', (e) => {
+            const rect = photoContainer.getBoundingClientRect();
+            const x = (e.clientX - rect.left) / rect.width - 0.5;
+            const y = (e.clientY - rect.top) / rect.height - 0.5;
+
+            if (photoRafId) {
+                cancelAnimationFrame(photoRafId);
+            }
+
+            photoRafId = requestAnimationFrame(() => {
+                const lerpFactor = 0.08;
+                lastPhotoX = lastPhotoX + (x - lastPhotoX) * lerpFactor;
+                lastPhotoY = lastPhotoY + (y - lastPhotoY) * lerpFactor;
+
+                photoContainer.style.transform = `
+                    perspective(1000px)
+                    rotateY(${lastPhotoX * 15}deg)
+                    rotateX(${-lastPhotoY * 15}deg)
+                    scale3d(1.02, 1.02, 1.02)
+                `;
+            });
+        });
+    </script>
+</body>
+</html>
