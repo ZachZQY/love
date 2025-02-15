@@ -83,24 +83,27 @@
         .message {
             opacity: 0;
             transform: translateY(20px);
-            transition: all 0.8s ease;
+            transition: all 0.5s ease;
+            margin: 15px 0;
+            cursor: pointer;
             position: relative;
-            perspective: 1000px;
-        }
-
-        .message:hover {
-            animation: wobble 0.5s ease-in-out;
-        }
-
-        @keyframes wobble {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px) rotateY(-5deg); }
-            75% { transform: translateX(5px) rotateY(5deg); }
         }
 
         .message.visible {
             opacity: 1;
             transform: translateY(0);
+        }
+
+        /* 添加文字点击效果样式 */
+        @keyframes textPop {
+            0% { transform: scale(0.5); opacity: 1; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+
+        .click-effect {
+            position: absolute;
+            pointer-events: none;
+            z-index: 1000;
         }
 
         .heart {
@@ -221,26 +224,498 @@
                 opacity: 0;
             }
         }
+
+        /* 修改红包样式，优化字体大小和布局 */
+        .red-envelope {
+            position: relative;
+            width: 200px;
+            height: 280px;
+            background: linear-gradient(135deg, #ff4d4d, #ff1a1a);
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(255, 0, 0, 0.2);
+            cursor: pointer;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+            border: 2px solid #ffcd00;
+            transform-origin: center center;  /* 确保从中心翻转 */
+        }
+
+        .red-envelope:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(255, 0, 0, 0.3);
+        }
+
+        .red-envelope.flipped {
+            transform: rotateY(180deg) translateZ(140px) translateY(-50px);  /* 添加向上位移 */
+        }
+
+        .red-envelope::before {  /* 添加红包装饰 */
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 40px;
+            background: #ffcd00;
+            border-radius: 50%;
+            box-shadow: 0 0 15px rgba(255, 205, 0, 0.5);
+        }
+
+        .envelope-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 1.3em;
+            text-align: center;
+            padding: 15px;  /* 减小内边距 */
+            border-radius: 15px;
+            background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E");  /* 添加纹理背景 */
+            transform-style: preserve-3d;
+        }
+
+        .envelope-face.back {
+            background: #ffffff;
+            color: #333;
+            transform: rotateY(180deg) translateZ(1px);  /* 添加微小的Z轴位移 */
+            border: 2px solid #ff4d4d;
+        }
+
+        .envelope-face h2 {
+            font-size: 1.5em;  /* 减小标题字体 */
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            font-weight: bold;
+            letter-spacing: 1px;  /* 减小字间距 */
+        }
+
+        .envelope-face.back h2 {
+            color: #ff4d4d;
+            text-shadow: none;
+            position: relative;
+        }
+
+        .envelope-face.back h2::after {  /* 添加标题装饰 */
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 2px;
+            background: #ff4d4d;
+        }
+
+        .gift-icon {
+            font-size: 2.5em;  /* 减小图标大小 */
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .envelope-message {
+            font-size: 0.9em;  /* 减小消息字体 */
+            line-height: 1.4;
+            margin-top: 10px;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            backdrop-filter: blur(5px);
+            word-wrap: break-word;  /* 添加自动换行 */
+            max-width: 90%;  /* 限制文本宽度 */
+        }
+
+        .balance-error {
+            font-size: 0.9em;  /* 减小错误信息字体 */
+            padding: 8px 15px;
+            margin-top: 10px;
+        }
+
+        /* 调整金币装饰的位置 */
+        .coin-decoration {
+            width: 25px;  /* 稍微减小金币大小 */
+            height: 25px;
+        }
+
+        .coin-1 { top: 8px; left: 8px; }
+        .coin-2 { top: 8px; right: 8px; }
+        .coin-3 { bottom: 8px; left: 8px; }
+        .coin-4 { bottom: 8px; right: 8px; }
+
+        /* 红包样式结束 */
+
+        /* 添加新的布局和动画样式 */
+        .section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s ease;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .section.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .gift-intro {
+            font-size: 1.3em;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            margin: 30px 0;
+        }
+
+        .gift-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 80px;
+            margin: 40px 0;
+            min-height: 800px;  /* 增加容器高度 */
+            perspective: 1000px;
+        }
+
+        #second-envelope-container {
+            opacity: 0;
+            transform: translateY(100px);
+            transition: all 1s ease;
+            display: none;
+            margin-top: 150px;  /* 增加与第一个红包的间距 */
+            position: relative;
+            z-index: 1;
+        }
+
+        #second-envelope-container.show {
+            opacity: 1;
+            transform: translateY(0);
+            display: block;
+        }
+
+        /* 修改第五部分样式确保不被遮挡 */
+        #ending-section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s ease;
+            display: none;
+            position: relative;
+            z-index: 2;  /* 确保在红包上层 */
+            margin-top: 100px;  /* 增加与红包的间距 */
+            padding-bottom: 40px;  /* 增加底部间距 */
+        }
+
+        #ending-section.show {
+            opacity: 1;
+            transform: translateY(0);
+            display: block;
+        }
+
+        /* 优化红包容器样式 */
+        .envelope-container {
+            position: relative;
+            width: 100%;
+            height: 300px;  /* 固定高度容纳红包 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 优化红包显示间隔 */
+        .gift-intro {
+            margin-bottom: 40px;  /* 增加礼物介绍文字与红包的间距 */
+        }
+
+        /* 添加漂浮爱心背景 */
+        .floating-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .floating-heart {
+            position: absolute;
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.5);
+            animation: floatingAnimation var(--duration) linear infinite;
+            top: -20px;
+            opacity: 0;
+        }
+
+        @keyframes floatingAnimation {
+            0% {
+                transform: translateY(0) rotate(0deg) scale(1);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg) scale(0.5);
+                opacity: 0;
+            }
+        }
+
+        /* 添加闪烁星星效果 */
+        .sparkle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            border-radius: 50%;
+            background-color: white;
+            pointer-events: none;
+            animation: sparkleAnimation var(--duration) ease-in-out infinite;
+        }
+
+        @keyframes sparkleAnimation {
+            0%, 100% {
+                opacity: 0;
+                transform: scale(0);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* 优化现有动画效果 */
+        .section {
+            animation: sectionFadeIn 0.8s ease forwards;
+            opacity: 0;
+            filter: blur(10px);
+        }
+
+        @keyframes sectionFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+                filter: blur(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+                filter: blur(0);
+            }
+        }
+
+        /* 优化红包动画 */
+        .red-envelope {
+            animation: shadowPulse 2s infinite;
+        }
+
+        @keyframes shadowPulse {
+            0% {
+                box-shadow: 0 5px 15px rgba(255, 0, 0, 0.2);
+            }
+            50% {
+                box-shadow: 0 5px 30px rgba(255, 0, 0, 0.4);
+            }
+            100% {
+                box-shadow: 0 5px 15px rgba(255, 0, 0, 0.2);
+            }
+        }
+
+        /* 优化文字动画 */
+        .message {
+            animation: messageFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes messageFloat {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
+        /* 添加红包容器样式 */
+        .envelope-wrapper {
+            position: relative;
+            width: 200px;
+            height: 280px;
+            margin: 20px 0;
+            transform-style: preserve-3d;
+        }
+
+        /* 修改过渡文字样式 */
+        .transition-message {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s ease;
+            color: white;
+            font-size: 1.3em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            margin: 60px 0;  /* 增加上下边距 */
+            display: none;
+            position: relative;
+            z-index: 10;  /* 确保文字在最上层 */
+            background: rgba(255, 105, 180, 0.2);  /* 添加半透明背景 */
+            padding: 15px 30px;  /* 添加内边距 */
+            border-radius: 20px;  /* 圆角边框 */
+            backdrop-filter: blur(5px);  /* 背景模糊效果 */
+            text-align: center;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .transition-message.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body>
+    <div class="floating-hearts"></div>
     <div class="container">
-        <h1>亲爱的韦韦，情人节快乐！</h1>
-        <div class="photo-container">
-            <img src="love_photo.jpg" alt="我们的照片" class="love-photo">
-        </div>
-        <p class="message">在这特别的日子里，想跟你说：</p>
-        <p class="message">你就是我的安逸美女，巴适得很！</p>
-        <p class="message">跟你在一起，我的心都要萨西了～</p>
-        <p class="message">你晓得不，遇见你是我最大的幸福！</p>
-        <p class="message">我要跟你耍一辈子，天天都要把你宠到底！</p>
-        <p class="message">愿我们的爱情永远甜蜜浪漫，巴适安逸！</p>
-        <p class="message">❤️ Zach永远爱你，这个事儿板板整整！❤️</p>
+        <!-- 第一部分：开场标题 -->
+        <section class="section" id="title-section">
+            <h1>亲爱的韦韦，情人节快乐！</h1>
+        </section>
+
+        <!-- 第二部分：照片 -->
+        <section class="section" id="photo-section">
+            <div class="photo-container">
+                <img src="love_photo.jpg" alt="我们的照片" class="love-photo">
+            </div>
+        </section>
+
+        <!-- 第三部分：打字效果的告白 -->
+        <section class="section" id="message-section">
+            <p class="message">在这特别的日子里，想跟你说：</p>
+            <p class="message">你就是我的安逸美女，巴适得很！</p>
+            <p class="message">跟你在一起，我的心都要萨西了～</p>
+            <p class="message">你晓得不，遇见你是我最大的幸福！</p>
+            <p class="message">我要跟你耍一辈子，天天都要把你宠到底！</p>
+        </section>
+
+        <!-- 第四部分：礼物赠送环节 -->
+        <section class="section" id="gift-section">
+            <p class="gift-intro">这是我给你准备的情人节礼物 💝</p>
+            
+            <div class="gift-section">
+                <!-- 第一个红包 -->
+                <div class="red-envelope" id="envelope-520w">
+                    <div class="coin-decoration coin-1"></div>
+                    <div class="coin-decoration coin-2"></div>
+                    <div class="coin-decoration coin-3"></div>
+                    <div class="coin-decoration coin-4"></div>
+                    <div class="envelope-face front">
+                        <i class="gift-icon">🎁</i>
+                        <h2>520W 红包</h2>
+                        <p class="envelope-message">点开有惊喜！</p>
+                    </div>
+                    <div class="envelope-face back">
+                        <h2>礼物发货失败</h2>
+                        <p class="envelope-message">糟糕！余额不足，520W红包发货失败！</p>
+                        <p class="balance-error">/(ㄒoㄒ)/~~</p>
+                    </div>
+                </div>
+
+                <!-- 添加过渡文字 -->
+                <p class="transition-message" id="transition-text">搞错了～，这下是真有</p>
+
+                <!-- 第二个红包容器 -->
+                <div id="second-envelope-container">
+                    <div class="red-envelope" id="envelope-520">
+                        <div class="coin-decoration coin-1"></div>
+                        <div class="coin-decoration coin-2"></div>
+                        <div class="coin-decoration coin-3"></div>
+                        <div class="coin-decoration coin-4"></div>
+                        <div class="envelope-face front">
+                            <i class="gift-icon">🧧</i>
+                            <h2>惊喜红包</h2>
+                            <p class="envelope-message">再点开试试看？</p>
+                        </div>
+                        <div class="envelope-face back">
+                            <h2>恭喜发财！</h2>
+                            <p class="envelope-message">520元已入账！</p>
+                            <p class="envelope-message">暗号：<span style="color: #ff4d4d; font-weight: bold;">520</span>，联系Zach提现！</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 第五部分：结尾表白 -->
+        <section class="section" id="ending-section">
+            <p class="message">愿我们的爱情永远甜蜜浪漫，巴适安逸！</p>
+            <p class="message">❤️ Zach永远爱你，这个事儿板板整整！❤️</p>
+        </section>
     </div>
 
     <script>
-        // 文字点击效果
-        document.querySelectorAll('.message').forEach(msg => {
+        // 控制前四个部分依次显示
+        const sections = document.querySelectorAll('.section:not(#ending-section)');
+        sections.forEach((section, index) => {
+            setTimeout(() => {
+                section.classList.add('show');
+            }, 1000 + index * 800);
+        });
+
+        // 修改红包点击事件处理
+        document.querySelectorAll('.red-envelope').forEach(envelope => {
+            envelope.addEventListener('click', () => {
+                envelope.classList.toggle('flipped');
+                
+                if (envelope.id === 'envelope-520w' && envelope.classList.contains('flipped')) {
+                    // 先显示过渡文字
+                    setTimeout(() => {
+                        const transitionText = document.getElementById('transition-text');
+                        transitionText.style.display = 'block';
+                        requestAnimationFrame(() => {
+                            transitionText.classList.add('show');
+                        });
+                        
+                        // 然后显示第二个红包
+                        setTimeout(() => {
+                            const secondEnvelopeContainer = document.getElementById('second-envelope-container');
+                            secondEnvelopeContainer.style.display = 'block';
+                            requestAnimationFrame(() => {
+                                secondEnvelopeContainer.classList.add('show');
+                            });
+                        }, 800);
+                    }, 1000);
+                } else if (envelope.id === 'envelope-520' && envelope.classList.contains('flipped')) {
+                    // 当第二个红包被翻转时，显示结尾表白
+                    setTimeout(() => {
+                        const endingSection = document.getElementById('ending-section');
+                        endingSection.style.display = 'block';
+                        requestAnimationFrame(() => {
+                            endingSection.classList.add('show');
+                        });
+                    }, 1000);
+                }
+            });
+        });
+
+        // 添加文字逐个显示效果
+        const messages = document.querySelectorAll('.message');
+        messages.forEach((msg, index) => {
+            setTimeout(() => {
+                msg.classList.add('visible');
+            }, 2500 + index * 500); // 从第一部分显示完后开始显示文字
+        });
+
+        // 添加文字点击效果
+        messages.forEach(msg => {
             msg.addEventListener('click', (e) => {
                 const text = document.createElement('div');
                 text.className = 'click-effect';
@@ -260,7 +735,7 @@
             });
         });
 
-        // 文字视差效果
+        // 添加文字视差效果
         let lastMouseX = 0;
         let lastMouseY = 0;
         let rafId = null;
@@ -274,7 +749,7 @@
             }
 
             rafId = requestAnimationFrame(() => {
-                const messages = document.querySelectorAll('.message');
+                const messages = document.querySelectorAll('.message.visible');
                 const lerpFactor = 0.1;
                 lastMouseX = lastMouseX + (mouseX - lastMouseX) * lerpFactor;
                 lastMouseY = lastMouseY + (mouseY - lastMouseY) * lerpFactor;
@@ -288,139 +763,50 @@
             });
         });
 
-        // 添加新的动画关键帧
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes textPop {
-                0% { transform: scale(0.5); opacity: 1; }
-                100% { transform: scale(2); opacity: 0; }
-            }
-        `;
-        document.head.appendChild(style);
-
-        function createHeart() {
+        // 添加漂浮爱心效果
+        function createFloatingHeart() {
             const heart = document.createElement('div');
-            heart.className = 'heart';
+            heart.className = 'floating-heart';
+            heart.innerHTML = '❤';
             heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
-            heart.innerHTML = '❤️';
-            document.body.appendChild(heart);
+            heart.style.setProperty('--duration', Math.random() * 3 + 2 + 's');
+            heart.style.transform = `scale(${Math.random() * 0.5 + 0.5})`;
+            document.querySelector('.floating-hearts').appendChild(heart);
 
-            setTimeout(() => {
-                heart.remove();
-            }, 4000);
+            heart.addEventListener('animationend', () => heart.remove());
         }
 
-        let activeParticles = 0;
-        const MAX_PARTICLES = 50;
+        setInterval(createFloatingHeart, 300);
 
-        function createParticle(x, y) {
-            if (activeParticles >= MAX_PARTICLES) return;
-            
-            activeParticles++;
-            const particle = document.createElement('div');
-            particle.className = 'particle';
-            const size = Math.random() * 4 + 2;
-            particle.style.width = size + 'px';
-            particle.style.height = size + 'px';
-            particle.style.left = x + 'px';
-            particle.style.top = y + 'px';
-            document.body.appendChild(particle);
+        // 添加闪烁星星效果
+        function createSparkle() {
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            sparkle.style.left = Math.random() * 100 + 'vw';
+            sparkle.style.top = Math.random() * 100 + 'vh';
+            sparkle.style.setProperty('--duration', Math.random() * 2 + 1 + 's');
+            document.body.appendChild(sparkle);
 
-            const angle = Math.random() * Math.PI * 2;
-            const velocity = Math.random() * 1.5 + 0.5;
-            const dx = Math.cos(angle) * velocity;
-            const dy = Math.sin(angle) * velocity;
-            let opacity = 1;
-
-            function animate() {
-                opacity -= 0.03;
-                particle.style.opacity = opacity;
-                particle.style.left = (parseFloat(particle.style.left) + dx) + 'px';
-                particle.style.top = (parseFloat(particle.style.top) + dy) + 'px';
-
-                if (opacity > 0) {
-                    requestAnimationFrame(animate);
-                } else {
-                    particle.remove();
-                    activeParticles--;
-                }
-            }
-
-            requestAnimationFrame(animate);
+            sparkle.addEventListener('animationend', () => sparkle.remove());
         }
 
-        function createRipple(event) {
-            const ripple = document.createElement('div');
-            ripple.className = 'ripple';
-            ripple.style.left = (event.clientX - 50) + 'px';
-            ripple.style.top = (event.clientY - 50) + 'px';
-            document.body.appendChild(ripple);
-
-            for (let i = 0; i < 8; i++) {
-                createParticle(event.clientX, event.clientY);
-            }
-
-            setTimeout(() => {
-                ripple.remove();
-            }, 1000);
-
-            createHeart();
+        // 初始创建一些星星
+        for(let i = 0; i < 30; i++) {
+            setTimeout(createSparkle, Math.random() * 1000);
         }
+        setInterval(createSparkle, 500);
 
-        document.body.addEventListener('click', createRipple);
-        let lastParticleTime = 0;
-        document.body.addEventListener('mousemove', (e) => {
-            const now = Date.now();
-            if (now - lastParticleTime > 50 && Math.random() < 0.1) {
-                createParticle(e.clientX, e.clientY);
-                lastParticleTime = now;
-            }
-        });
-
-        let lastHeartTime = 0;
-        function createHeartWithThrottle() {
-            const now = Date.now();
-            if (now - lastHeartTime > 500) {
-                createHeart();
-                lastHeartTime = now;
-            }
-        }
-        setInterval(createHeartWithThrottle, 500);
-
-        const messages = document.querySelectorAll('.message');
-        messages.forEach((msg, index) => {
-            setTimeout(() => {
-                msg.classList.add('visible');
-            }, 1000 + 500 * index);
-        });
-
-        const photoContainer = document.querySelector('.photo-container');
-        let lastPhotoX = 0;
-        let lastPhotoY = 0;
-        let photoRafId = null;
-
+        // 优化鼠标移动效果
         document.addEventListener('mousemove', (e) => {
-            const rect = photoContainer.getBoundingClientRect();
-            const x = (e.clientX - rect.left) / rect.width - 0.5;
-            const y = (e.clientY - rect.top) / rect.height - 0.5;
+            // 创建跟随鼠标的闪光效果
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            sparkle.style.left = e.pageX + 'px';
+            sparkle.style.top = e.pageY + 'px';
+            sparkle.style.setProperty('--duration', '0.5s');
+            document.body.appendChild(sparkle);
 
-            if (photoRafId) {
-                cancelAnimationFrame(photoRafId);
-            }
-
-            photoRafId = requestAnimationFrame(() => {
-                const lerpFactor = 0.08;
-                lastPhotoX = lastPhotoX + (x - lastPhotoX) * lerpFactor;
-                lastPhotoY = lastPhotoY + (y - lastPhotoY) * lerpFactor;
-
-                photoContainer.style.transform = `
-                    perspective(1000px)
-                    rotateY(${lastPhotoX * 15}deg)
-                    rotateX(${-lastPhotoY * 15}deg)
-                    scale3d(1.02, 1.02, 1.02)
-                `;
-            });
+            setTimeout(() => sparkle.remove(), 500);
         });
     </script>
 </body>
