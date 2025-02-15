@@ -580,6 +580,65 @@
             opacity: 1;
             transform: translateY(0);
         }
+
+        /* 添加爱心爆炸特效样式 */
+        .heart-burst {
+            position: absolute;
+            pointer-events: none;
+            animation: heartBurst 0.8s cubic-bezier(0.1, 0.5, 0.5, 1) forwards;
+        }
+
+        @keyframes heartBurst {
+            0% {
+                transform: scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+
+        /* 添加彩虹爱心样式 */
+        .rainbow-heart {
+            position: fixed;
+            font-size: 24px;
+            pointer-events: none;
+            z-index: 1000;
+            animation: rainbowFloat 3s ease-in-out;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+        }
+
+        @keyframes rainbowFloat {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* 添加爱心轨迹特效 */
+        .heart-trail {
+            position: fixed;
+            pointer-events: none;
+            z-index: 999;
+            font-size: 16px;
+            animation: trailFloat 2s ease-out forwards;
+        }
+
+        @keyframes trailFloat {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--tx), var(--ty)) rotate(360deg);
+                opacity: 0;
+            }
+        }
     </style>
 </head>
 <body>
@@ -808,6 +867,70 @@
 
             setTimeout(() => sparkle.remove(), 500);
         });
+
+        // 添加点击爆炸效果
+        document.addEventListener('click', (e) => {
+            // 创建爱心爆炸效果
+            for (let i = 0; i < 12; i++) {
+                const heart = document.createElement('div');
+                heart.innerHTML = '❤';
+                heart.className = 'heart-burst';
+                heart.style.left = e.pageX + 'px';
+                heart.style.top = e.pageY + 'px';
+                heart.style.color = `hsl(${Math.random() * 360}, 100%, 70%)`;
+                heart.style.transform = `rotate(${i * 30}deg)`;
+                document.body.appendChild(heart);
+
+                setTimeout(() => heart.remove(), 800);
+            }
+
+            // 创建彩虹爱心
+            const rainbow = document.createElement('div');
+            rainbow.className = 'rainbow-heart';
+            rainbow.innerHTML = '❤';
+            rainbow.style.left = e.pageX + 'px';
+            rainbow.style.top = e.pageY + 'px';
+            rainbow.style.color = `hsl(${Math.random() * 360}, 100%, 70%)`;
+            document.body.appendChild(rainbow);
+
+            setTimeout(() => rainbow.remove(), 3000);
+        });
+
+        // 添加鼠标移动爱心轨迹
+        let lastX = 0;
+        let lastY = 0;
+        
+        document.addEventListener('mousemove', (e) => {
+            if (Math.abs(e.pageX - lastX) + Math.abs(e.pageY - lastY) > 30) {
+                const heart = document.createElement('div');
+                heart.className = 'heart-trail';
+                heart.innerHTML = '❤';
+                heart.style.left = e.pageX + 'px';
+                heart.style.top = e.pageY + 'px';
+                heart.style.color = `hsl(${Math.random() * 360}, 100%, 70%)`;
+                heart.style.setProperty('--tx', `${(Math.random() - 0.5) * 100}px`);
+                heart.style.setProperty('--ty', `${-Math.random() * 100}px`);
+                document.body.appendChild(heart);
+
+                setTimeout(() => heart.remove(), 2000);
+                
+                lastX = e.pageX;
+                lastY = e.pageY;
+            }
+        });
+
+        // 定期创建随机彩虹爱心
+        setInterval(() => {
+            const rainbow = document.createElement('div');
+            rainbow.className = 'rainbow-heart';
+            rainbow.innerHTML = '❤';
+            rainbow.style.left = Math.random() * window.innerWidth + 'px';
+            rainbow.style.top = window.innerHeight + 'px';
+            rainbow.style.color = `hsl(${Math.random() * 360}, 100%, 70%)`;
+            document.body.appendChild(rainbow);
+
+            setTimeout(() => rainbow.remove(), 3000);
+        }, 2000);
     </script>
 </body>
 </html>
